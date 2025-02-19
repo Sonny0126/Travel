@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <style>
+      body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-image: url('image/Loading.jpg'); /* 배경 이미지 설정 */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+      }
+      /* 구름 스타일 */
+      .cloud {
+            position: absolute;
+            top: 20%; /* 구름의 초기 위치 */
+            right: -200px; /* 처음에는 화면 밖에 위치 */
+            width: 300px; /* 구름 크기 */
+            opacity: 0.8;
+            animation: cloudMove 2s linear infinite; /* 애니메이션 적용 */
+      }
+
+      /* 애니메이션 설정 */
+      @keyframes cloudMove {
+            0% {
+                right: -250px; /* 시작 위치 (화면 오른쪽 바깥) */
+            }
+            100% {
+                right: 100vw; /* 화면 왼쪽으로 이동 */
+            }
+      }
+    </style>
+    <script>
+      // 5초 후 card.html로 이동
+      setTimeout(function() {
+          window.location.href = "card.html";
+      }, 5000);
+    </script>
+</head>
+<body>  
+    <!-- 구름 이미지 -->
+    <img src="image/cloud.png" alt="Cloud" class="cloud">
+</body> 
+</html>

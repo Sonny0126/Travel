@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Page</title>
+    <style>
+        /* 전체 페이지 스타일 */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-image: url('image/card_background.png'); /* 배경 이미지 설정 */
+            background-size: 80%; /* 화면에 꽉 차게 */
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: flex-start; /* 왼쪽 정렬 */
+            align-items: center; /* 수직 중앙 정렬 */
+            position: relative;
+        }
+
+        /* 지갑 스타일 */
+        .wallet {
+            max-width: 40vw; /* 지갑 크기 조정 */
+            max-height: 80vh;
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 13vw; /* 초기 왼쪽 위치 */
+            transform: translateY(-50%);
+        }
+
+        /* 카드 스타일 */
+        .card {
+            max-width: 40vw; /* 카드 크기 조정 */
+            max-height: 80vh;
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 10vw; 
+            transform: translateY(-50%);
+            cursor: pointer; /* 클릭 가능하도록 변경 */
+            transition: left 1s ease-out; /* 부드러운 이동 효과 */
+        }
+    </style>
+</head>
+<body>  
+    <!-- 지갑 이미지 -->
+    <img src="image/wallet.png" alt="wallet" class="wallet" id="wallet">
+    <!-- 카드 이미지 (클릭 시 이동) -->
+    <img src="image/card.png" alt="card" class="card" id="card">
+
+    <script>
+        const card = document.getElementById("card");
+        const wallet = document.getElementById("wallet");
+
+        let moved = false; // 카드 이동 상태
+
+        card.addEventListener("click", () => {
+            if (!moved) {
+                card.style.left = "45vw"; // 오른쪽으로 이동
+                moved = true;
+            } else {
+                card.style.left = wallet.style.left; // 원래 위치(지갑)로 복귀
+                moved = false;
+            }
+        });
+    </script>
+</body> 
+</html>
