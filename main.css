@@ -1,21 +1,29 @@
 body {
-    display: flex;
-    justify-content: center; /* 가로 중앙 */
-    align-items: center; /* 세로 중앙 */
-    height: 180vh; /* 화면 전체 높이 */
-    margin: 0;
-    background-image: url('image/travel_background.jpg'); /* ✅ 배경 이미지 추가 */
-    background-size: 100%; /* 화면에 꽉 차게 */
-    background-repeat: no-repeat;
+  display: flex;
+  justify-content: center; /* 가로 중앙 */
+  align-items: center; /* 세로 중앙 */
+  width: 100vw;
+  height: 100vh; /* 화면 전체 높이 */
+  margin: 0;
+  background-image: url('image/travel_background.jpg'); /* 배경 이미지 추가 */
+  background-size: contain; /* 비율 유지하면서 맞춤 */
+  background-repeat: no-repeat;
+  background-position: center center; /* 배경을 중앙으로 정렬 */
+  background-attachment: fixed; /* 배경 고정 */
+  overflow: hidden; /* 스크롤 방지 */
 }
- 
+
+
 #startBtn {
+  width: fit-content;
   background: none;
   border: none;
   cursor: pointer;
-  border: none;
 }
 
 #startBtn img {
-  width: 100px;  /* 버튼 크기 조정 */
+  width: auto;  /* 비율 유지 */
+  margin-top: 300px;
+  max-width: 100%; /* 화면 크기에 맞게 조정 */
+  height: auto; 
 }
