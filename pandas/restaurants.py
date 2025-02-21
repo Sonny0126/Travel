@@ -27,7 +27,7 @@ def parse_restaurants_from_txt(file_path):
         extracted_reviews = []
         for reviewer, score, content in review_matches:
             extracted_reviews.append(f"{reviewer}({score}점): {content.strip()}")
-        
+
         review_text = " | ".join(extracted_reviews)
         
         # 리스트에 레스토랑 정보 추가
@@ -40,39 +40,41 @@ def parse_restaurants_from_txt(file_path):
 
 def preprocess_query(query):
     """
-    사용자의 질문에서 불필요한 텍스트를 제거하여 검색 최적화
+    사용자의 질문에서 레스토랑 이름을 추출하여 검색 최적화
     """
-    query = re.sub(r"Q\.\s*", "", query)  # "Q. " 제거
-    query = re.sub(r"(의 위치가 어디인가요\?|위치가 어디인가요\?|주소가 어디인가요\?)", "", query)  # 특정 질문 패턴 제거
-    query = query.strip()
+    query = re.sub(r"[^가-힣a-zA-Z0-9 ]", "", query)  # 특수문자 제거 (예: ?, !, @ 등)
+    
+    # 불필요한 질문 패턴 제거 (더 다양한 형태 지원)
+    query = re.sub(r"(위치|주소|어디|정보|리뷰|평점).*", "", query).strip()
+    
     return query
 
-def search_restaurant(restaurants, query):
+def search_restaurant(df_restaurants, query):
     """
-    사용자의 질문에서 레스토랑 이름을 추출하고 해당 정보를 검색하여 자연어 응답 생성
+    사용자 입력이 레스토랑 이름과 정확히 일치하면 해당 정보를 반환
     """
     query = preprocess_query(query)  # 검색어 정제
 
     # 1차 검색: 정확한 이름 포함 여부
-    matching_rows = restaurants[restaurants["이름"].str.contains(query, case=False, na=False)]
+    matching_rows = df_restaurants[df_restaurants["이름"].str.contains(query, case=False, na=False)]
 
     # 2차 검색: 부분 일치 허용 (예: "샐러디"만 입력해도 "샐러디 인천대점" 검색됨)
     if matching_rows.empty:
-        matching_rows = restaurants[restaurants["이름"].apply(lambda x: query in x)]
+        matching_rows = df_restaurants[df_restaurants["이름"].apply(lambda x: query in x)]
     
     if not matching_rows.empty:
         row = matching_rows.iloc[0]  # 첫 번째 검색 결과 선택
         response = (
-            f"주어진 정보에 따르면 {row['이름']}은(는) {row['주소']}에 위치해 있습니다.\n"
-            f"📌 평점: {row['평점']}점\n"
-            f"📝 주요 리뷰: {row['주요 리뷰']}\n"
-            f"더 자세한 정보는 직접 방문하여 확인하세요!"
+            f"{row['이름']}\n"
+            f"📍 위치: {row['주소']}\n"
+            f"⭐ 평점: {row['평점']}점\n"
+            f"📝 주요 리뷰: {row['주요 리뷰']}"
         )
         return response
-    return "죄송합니다. 해당 레스토랑에 대한 정보를 찾을 수 없습니다."
+    return "❌ 해당 레스토랑 정보를 찾을 수 없습니다."
 
 # 실행 예제
-file_path = "C:\\Users\\sonsm\\pandas\\restaurants.txt"  # 파일 경로 수정
+file_path = "restaurants.txt"  # 파일명 설정
 if not os.path.exists(file_path):
     print(f"❌ 오류: '{file_path}' 파일을 찾을 수 없습니다.")
 else:
@@ -82,18 +84,15 @@ else:
     print(df_restaurants)
 
     # CSV 파일로 저장
-    output_file = "C:\\Users\\sonsm\\pandas\\restaurants_clean.csv"
+    output_file = "restaurants_clean.csv"
     df_restaurants.to_csv(output_file, index=False, encoding="utf-8-sig")
     print(f"✅ 레스토랑 데이터가 '{output_file}' 파일로 저장되었습니다.")
 
     # 예제 검색 실행
-    user_query = "Q. 샐러디 인천대점의 위치가 어디인가요?"
-    response = search_restaurant(df_restaurants, user_query)
-    print(response)
-
-    user_query = "캡틴 루이의 위치가 어디인가요?"
-    response = search_restaurant(df_restaurants, user_query)
-    print(response)
+    queries = ["샐러디 인천대점", "캡틴 루이"]
+    for query in queries:
+        response = search_restaurant(df_restaurants, query)
+        print(response)
 
 # Q1. 캡틴 루이의 위치가 어디인가요?
 # Q2. 캡틴 루이의 주요 메뉴는 무엇인가요?
